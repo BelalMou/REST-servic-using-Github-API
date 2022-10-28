@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:400,800" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.js">
+
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="inner_header">
+            <div class = "logo_contanier">
+                <h1>REST-servic using <span>Github API</span></h1>
+            </div>
+        </div>
+    </div>
+
+    <input type="text" id="Username" name="" placeholder="Github username">
+    <button id = 'btnRepos'>Get Repositories</button>
+    <button id = 'btnLanguage'>Get languages</button>
+    <button id = 'btnEmail'>Get Email</button>
+    <div id = 'divResult'></div>
+
+    <script>
+    
+    const btnRepos = document.getElementById("btnRepos")
+    const btnLanguage = document.getElementById("btnLanguage")
+    const btnEmail = document.getElementById("btnEmail")
+    const divResult = document.getElementById("divResult")
+
+    btnRepos.addEventListener("click", getRepos)
+    btnLanguage.addEventListener("click", getLanguages)
+    btnEmail.addEventListener("click", getEmail)
+
+    
+    async function getRepos(){
+        clear()
+        var name = document.getElementById("Username").value;
+        const url = "https://api.github.com/users/"+ name +"/repos"
+        const response = await fetch (url)
+        const result = await response.json()
+
+        result.forEach(i =>{
+            const anchor = document.createElement("a")
+            anchor.textContent = i.name;
+            divResult.appendChild(anchor)
+            divResult.appendChild(document.createElement("br"))
+
+        })
+
+    }
+    async function getLanguages(){
+        clear()
+        var name = document.getElementById("Username").value;
+        const url = "https://api.github.com/users/"+ name +"/repos"
+        const response = await fetch (url)
+        const result = await response.json()
+
+        result.forEach(i =>{
+            const anchor = document.createElement("a")
+            anchor.textContent = i.language;
+            divResult.appendChild(anchor)
+            divResult.appendChild(document.createElement("br"))
+
+        })
+
+    }
+    async function getEmail(){
+        clear();
+        var name = document.getElementById("Username").value;
+        const url = "https://api.github.com/users/"+ name +"/repos"
+        const response = await fetch (url)
+        const result = await response.json()
+        var url2 = ""
+
+        result.forEach(i =>{
+            //to try to get the email 
+            url2 = "https://api.github.com/repos/"+ name +"/"+ i.name +"/commits" 
+
+        })
+
+        var url_email = url2
+        const response_email = await fetch(url_email)
+        const result_email = await response_email.json()
+        var email = ""
+        result_email.forEach(i =>{
+
+            const anchor2 = document.createElement("a")
+            anchor2.textContent = i.commit.author.email;
+            divResult.appendChild(anchor2)
+            divResult.appendChild(document.createElement("br"))
+        })
+
+    }
+
+    function clear(){
+        while(divResult.firstChild)
+            divResult.removeChild(divResult.firstChild)
+    }
+    </script>
+
+</body>
+</html>
